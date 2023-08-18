@@ -4,9 +4,10 @@ defmodule Jira.Repo.Migrations.CreateProjects do
   def change do
     create table("projects") do
       add :name, :string
-      add :deadline, :date
       add :description, :string
-      # timestamps()
+      add :user_id, references(:users)
+      
+      timestamps()
     end
   end
 end

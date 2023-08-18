@@ -4,16 +4,16 @@ defmodule Jira.Project do
   
     schema "projects" do
       field :name, :string
-      field :deadline, :date
       field :description, :string
       belongs_to :user, Jira.User
-      has_one :task, Jira.Task
-     # timestamps()
+      has_many :tasks, Jira.Task
+
+      timestamps()
     end
 
     def changeset(project, attrs) do
         project
-        |> cast(attrs, [:name, :deadline, :description, :user_id])
+        |> cast(attrs, [:name, :description, :user_id])
        # |> validate_unique(:login)
         #|> unique_constraint(:login)
         |> validate_length(:name, min: 3, max: 10)

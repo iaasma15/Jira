@@ -8,6 +8,7 @@ defmodule Jira.Task do
       field :status, :string
 
       belongs_to :project, Jira.Project
+
       timestamps()
     end
     def changeset(task, attrs) do
@@ -16,6 +17,6 @@ defmodule Jira.Task do
        # |> validate_unique(:login)
         #|> unique_constraint(:login)
         |> validate_length(:name, min: 3, max: 10)
-        |> Repo.preload(:project)
+      #  |> Repo.preload(:project)
     end
     end

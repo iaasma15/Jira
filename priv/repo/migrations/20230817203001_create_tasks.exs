@@ -6,6 +6,7 @@ defmodule Jira.Repo.Migrations.CreateTasks do
     add :name, :string
     add :description, :string
     add :status, :string
+    add :project_id, references(:projects)
     
     timestamps()
   end

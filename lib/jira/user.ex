@@ -6,9 +6,9 @@ defmodule Jira.User do
     field :name, :string
     field :pass_hash, :string
     field :login, :string
-    has_one :projects, Jira.Projects
+    has_many :projects, Jira.Project
 
-    #timestamps()
+    timestamps()
   end
 def changeset(user, attrs) do
     user
