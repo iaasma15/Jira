@@ -1,0 +1,7 @@
+<h1 class="text-3xl font-raleway text-black-400">Create a new user</h1>
+<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
+<%= Phoenix.Template.render(JiraWeb.UserHTML, "form", "html",
+  changeset: @changeset,
+  action: "/users",
+  submit: "Create"
+) %>

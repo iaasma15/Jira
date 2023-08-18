@@ -1,0 +1,19 @@
+<h1 class="text-3xl font-raleway text-black-400">Register</h1>
+
+<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
+
+<%= form_for @changeset, "/register", [class: "bg-white"] , fn f -> %>
+  <label class="block text-gray-700 text-sm font-bold mb-2">Name:</label> <%= text_input(f, :name,
+    class: "text-input"
+  ) %>
+  
+  <label class="block text-gray-700 text-sm font-bold mb-2">Password:</label> <%= text_input(
+    f,
+    :pass_hash,
+    class: "text-input"
+  ) %>
+  <%= submit("Register",
+    class:
+      "block mt-3 leading-3 p-4 bg-teal-500 hover:bg-teal-600 focus:outline-none focus:shadow-outline"
+  ) %>
+<% end %>

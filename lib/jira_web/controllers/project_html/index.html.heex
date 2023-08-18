@@ -1,0 +1,35 @@
+<h1 class="text-3xl font-raleway text-black-400">Project List</h1>
+<form action="/projects/" method="get">
+  <label for="search">Search:</label> <br />
+  <input type="text" id="search" name="search" value="" /><br />
+</form>
+<table class="border-collapse border-2 border-gray-500 mt-1">
+  <tr>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">Name</th>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">ID</th>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">Link</th>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">User ID</th>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">Delete</th>
+  </tr>
+  <%= for project <- @projects do %>
+    <tr>
+      <td class="border border-gray-400 px-4 py-2"><%= project.name %></td>
+      <td class="border border-gray-400 px-4 py-2"><%= project.id %></td>
+      <td class="border border-gray-400 px-4 py-2"><b><%= link_to_project(project) %></b></td>
+      <td class="border border-gray-400 px-4 py-2"><b><%= project.user_id %></b></td>
+      <td class="border border-gray-400 px-4 py-2"><b><%= delete_project_link(project) %></b></td>
+    </tr>
+  <% end %>
+</table>
+<a
+  class="block mt-3 w-40 leading-3 p-4 bg-teal-500 hover:bg-teal-600 focus:outline-none focus:shadow-outline"
+  href="/projects/new"
+>
+  Add a new Project
+</a>
+<a
+  class="block mt-3 w-40 leading-3 p-4 bg-teal-500 hover:bg-teal-600 focus:outline-none focus:shadow-outline"
+  href="/projects/myprojects"
+>
+  My Projects
+</a>

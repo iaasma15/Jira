@@ -1,0 +1,8 @@
+<h1 class="text-3xl font-raleway text-black-400">Edit User</h1>
+
+<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
+<%= Phoenix.Template.render(RumblWeb.UserHTML, "form", "html",
+  changeset: @changeset,
+  action: "/users/#{@user.id}",
+  submit: "Update"
+) %>
