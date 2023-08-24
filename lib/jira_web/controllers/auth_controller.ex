@@ -4,7 +4,7 @@ defmodule JiraWeb.AuthController do
   alias Jira.User
 
   def form(conn, params) do
-    changeset = Users.change_user(%User{})
+    changeset = Users.new_user_changeset()
     render(conn, "form.html", changeset: changeset)
   end
 
@@ -16,11 +16,11 @@ defmodule JiraWeb.AuthController do
         conn
         |> put_session(:current_user, user)
         |> put_flash(:info, "#{user.name} login successfully.")
-        |> redirect(to: redirect_to_path)
+        |> redirect(to: "/projects")
 
-      {:error, :username_and_password_does_not_match} ->
+      {:error, :name_and_password_does_not_match} ->
         conn
-        |> put_flash(:error, ":username_and_password_does_not_match")
+        |> put_flash(:error, ":name_and_password_does_not_match")
         |> redirect(to: "/login")
 
       {:error, :user_not_found} ->

@@ -4,7 +4,7 @@ defmodule JiraWeb.RegistrationController do
   alias Jira.User
 
   def form(conn, params) do
-    changeset = Users.change_user(%User{})
+    changeset = Users.new_user_changeset()
     render(conn, "form.html", changeset: changeset)
   end
 
@@ -13,7 +13,7 @@ defmodule JiraWeb.RegistrationController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "#{user.name} registered successfully.")
-        |> redirect(to: "/")
+        |> redirect(to: "/login")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "form.html", changeset: changeset)

@@ -1,21 +1,17 @@
 <%= form_for @changeset, @action, [class: "bg-white"] , fn f -> %>
-  <label class="block text-gray-700 text-sm font-bold mb-2">Project Name</label> <%= text_input(f, :name,
+  <label class="block text-gray-700 text-sm font-bold mb-2">Project Name</label> <%= text_input(
+    f,
+    :name,
     class: "text-input"
   ) %>
 
-    <label class="block text-gray-700 text-sm font-bold mb-2">Assigned To</label> <%= text_input(f, :user_id,
+  <label class="block text-gray-700 text-sm font-bold mb-2">Project Description</label> <%= text_input(
+    f,
+    :description,
     class: "text-input"
   ) %>
-  
-  <label class="block text-gray-700 text-sm font-bold mb-2">Project Description</label> <%= text_input(f, :description,
-    class: "text-input"
-  ) %>
-  
-  <label class="block text-gray-700 text-sm font-bold mb-2">Project Deadline</label> <%= text_input(f, :deadline,
-    class: "text-input"
-  ) %>
-  
-   <%= submit(@submit,
+
+  <%= submit(@submit,
     class:
       "block mt-3 leading-3 p-4 bg-teal-500 hover:bg-teal-600 focus:outline-none focus:shadow-outline"
   ) %>

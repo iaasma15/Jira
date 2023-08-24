@@ -6,7 +6,7 @@ defmodule Jira.Repo.Migrations.CreateUniqueUsers do
       add :name, :string
       add :pass_hash, :string
       add :login, :string, unique: true
-      
+
       timestamps()
     end
   end

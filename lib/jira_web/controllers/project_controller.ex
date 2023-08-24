@@ -1,45 +1,52 @@
 defmodule JiraWeb.ProjectController do
-    use JiraWeb, :controller
-    import Ecto.Query
-    alias Jira.Projects
-    alias Jira.Project
+  use JiraWeb, :controller
+  import Ecto.Query
+  alias Jira.Projects
+  alias Jira.Project
 
+  def index(conn, params) do
+    IO.inspect(params)
+    current_user = get_session(conn, :current_user)
+    projects = Projects.user_projects(current_user.id, params["search"])
+    render(conn, "index.html", projects: projects)
+  end
 
-    def index(conn, params) do
-        projects = Projects.list_projects(params)
-        render(conn, "index.html", projects: projects)
-    end
+  def show(conn, %{"id" => id}) do
+    project = Projects.get_project(id)
+    render(conn, "show.html", project: project)
+  end
 
-    def show(conn, %{"id" => id}) do
-        project = Projects.get_project(id)
-        render(conn, "show.html", project: project)
-    end
+  def new(conn, _params) do
+    changeset = Projects.new_project_changeset()
+    render(conn, "new.html", changeset: changeset)
+  end
 
-    def new(conn, _params) do
-        changeset = Projects.change_project(%Project{})
+  def create(conn, %{"project" => params}) do
+    current_user = get_session(conn, :current_user)
+    project_params = Map.put(params, "user_id", current_user.id)
+
+    case Projects.create_project(project_params) do
+      {:ok, project} ->
+        conn
+        |> put_flash(:info, "#{project.name} created successfully.")
+        |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
+  end
 
-    def myprojects(conn, params) do
-        projects_query = from p in Project,
-          where: p.name == "myprojects", 
-          select: p
-          projects = Jira.Repo.all(projects_query)
-
-        render(conn, "myprojects.html", projects: projects)
-      end
-      
-
-    def create(conn, %{"project" => project_params}) do
-        case Projects.create_project(project_params) do
-          {:ok, project} ->
-            conn
-            |> put_flash(:info, "#{project.name} created successfully.")
-            |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :show, project))
-      
-          {:error, %Ecto.Changeset{} = changeset} ->
-            render(conn, "new.html", changeset: changeset)
-        end
-      end
-
+  def delete(conn, %{"id" => id}) do
+    with %Project{} = project <- Projects.get_project(id),
+         {:ok, project} <- Projects.delete_project(project) do
+      conn
+      |> put_flash(:info, "#{project.name} deleted successfully.")
+      |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+    else
+      nil ->
+        conn
+        |> put_flash(:error, "Project not found.")
+        |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+    end
+  end
 end

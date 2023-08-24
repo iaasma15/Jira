@@ -25,15 +25,4 @@ defmodule JiraWeb.UserHTML do
   def delete_user_link(user) do
     Link.link("Delete", to: "/users/#{user.id}", method: :delete)
   end
-
-  def error_message(changeset) do
-    changeset.errors
-    |> Enum.map(fn {attr, {msg, _}} ->
-      "#{attr} : #{msg}"
-    end)
-    |> Enum.join(". ")
-  end
-
-  def render("form.html", assigns) do
-  end
 end

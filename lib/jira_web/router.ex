@@ -22,7 +22,6 @@ defmodule JiraWeb.Router do
     get "/login", AuthController, :form
     post "/login", AuthController, :login
 
-    get "/myprojects", ProjectController, :myprojects
     get "/", PageController, :home
     resources "/users", UserController
     resources "/projects", ProjectController
