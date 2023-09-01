@@ -15,10 +15,7 @@ defmodule Jira.Task do
   def changeset(task, attrs) do
     task
     |> cast(attrs, [:name, :description, :status, :project_id])
-    # |> validate_unique(:login)
-    # |> unique_constraint(:login)
+    |> validate_required([:project_id, :name])
     |> validate_length(:name, min: 3, max: 10)
-
-    #  |> Repo.preload(:project)
   end
 end

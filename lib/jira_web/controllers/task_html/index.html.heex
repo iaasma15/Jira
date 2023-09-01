@@ -9,13 +9,11 @@
   <tr>
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Name</th>
 
-    <th class="border border-gray-400 px-4 py-2 text-gray-800">ID</th>
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">Task ID</th>
 
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Description</th>
 
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Status</th>
-
-    <th class="border border-gray-400 px-4 py-2 text-gray-800">Project ID</th>
 
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Link</th>
 
@@ -32,18 +30,13 @@
 
       <td class="border border-gray-400 px-4 py-2"><%= task.status %></td>
 
-      <td class="border border-gray-400 px-4 py-2"><%= task.project_id %></td>
+      <td class="border border-gray-400 px-4 py-2"><b><%= link_to_task(@conn, task.id) %></b></td>
 
-      <td class="border border-gray-400 px-4 py-2"><b><%= link_to_task(task) %></b></td>
-
-      <td class="border border-gray-400 px-4 py-2"><b><%= delete_task_link(task) %></b></td>
+      <td class="border border-gray-400 px-4 py-2">
+        <b><%= delete_task_link(@conn, task.id) %></b>
+      </td>
     </tr>
   <% end %>
 </table>
 
-<a
-  class="block mt-3 w-40 leading-3 p-4 bg-teal-500 hover:bg-teal-600 focus:outline-none focus:shadow-outline"
-  href="/tasks/new"
->
-  Create a new Task
-</a>
+<%= link_to_new_task(@project_id) %>

@@ -44,6 +44,7 @@ defmodule JiraWeb do
 
       import Plug.Conn
       import JiraWeb.Gettext
+      import JiraWeb.Router.Helpers
 
       unquote(verified_routes())
     end
@@ -75,6 +76,8 @@ defmodule JiraWeb do
         only: [get_csrf_token: 0, view_module: 1, view_template: 1]
 
       import JiraWeb.HTMLHelpers
+
+      import JiraWeb.Router.Helpers
 
       # Include general helpers for rendering HTML
       unquote(html_helpers())

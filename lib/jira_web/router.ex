@@ -8,6 +8,12 @@ defmodule JiraWeb.Router do
     plug :put_root_layout, html: {JiraWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :set_current_user
+  end
+
+  def set_current_user(conn, params) do
+    current_user = get_session(conn, :current_user)
+    assign(conn, :current_user, current_user)
   end
 
   pipeline :api do
@@ -21,11 +27,15 @@ defmodule JiraWeb.Router do
     post "/register", RegistrationController, :register
     get "/login", AuthController, :form
     post "/login", AuthController, :login
+    delete "/logout", AuthController, :logout
 
     get "/", PageController, :home
     resources "/users", UserController
-    resources "/projects", ProjectController
-    resources "/tasks", TaskController
+
+    resources "/projects", ProjectController do
+      resources "/tasks", TaskController
+    end
+
     get "/task_description/:id", TaskController, :show
   end
 

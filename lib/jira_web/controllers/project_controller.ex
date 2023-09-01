@@ -5,7 +5,6 @@ defmodule JiraWeb.ProjectController do
   alias Jira.Project
 
   def index(conn, params) do
-    IO.inspect(params)
     current_user = get_session(conn, :current_user)
     projects = Projects.user_projects(current_user.id, params["search"])
     render(conn, "index.html", projects: projects)
@@ -22,14 +21,14 @@ defmodule JiraWeb.ProjectController do
   end
 
   def create(conn, %{"project" => params}) do
-    current_user = get_session(conn, :current_user)
+    current_user = conn.assigns[:current_user]
     project_params = Map.put(params, "user_id", current_user.id)
 
     case Projects.create_project(project_params) do
       {:ok, project} ->
         conn
         |> put_flash(:info, "#{project.name} created successfully.")
-        |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+        |> redirect(to: project_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -41,12 +40,12 @@ defmodule JiraWeb.ProjectController do
          {:ok, project} <- Projects.delete_project(project) do
       conn
       |> put_flash(:info, "#{project.name} deleted successfully.")
-      |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+      |> redirect(to: project_path(conn, :index))
     else
       nil ->
         conn
         |> put_flash(:error, "Project not found.")
-        |> redirect(to: JiraWeb.Router.Helpers.project_path(conn, :index))
+        |> redirect(to: project_path(conn, :index))
     end
   end
 end

@@ -5,6 +5,6 @@
 <p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
 <%= Phoenix.Template.render(JiraWeb.TaskHTML, "form", "html",
   changeset: @changeset,
-  action: "/tasks",
+  action: "/projects/#{@project_id}/tasks",
   submit: "Create"
 ) %>

@@ -14,7 +14,7 @@ defmodule JiraWeb.ProjectHTML do
 
   def link_to_project(%Project{id: id}) do
     # path = RumblWeb.Router.Helpers.user_path(conn, :create)
-    Link.link("Show", to: "/projects/#{id}")
+    Link.link("Show", to: "/projects/#{id}/tasks")
   end
 
   # def edit_project_link(%Project{id: id}) do

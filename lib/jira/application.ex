@@ -2,7 +2,7 @@ defmodule Jira.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
-
+  import Phoenix.HTML.Link
   use Application
 
   @impl true

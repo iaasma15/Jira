@@ -35,24 +35,31 @@ defmodule JiraWeb.UserController do
       {:ok, user} ->
         conn
         |> put_flash(:info, "#{user.name} created successfully.")
-        |> redirect(to: JiraWeb.Router.Helpers.user_path(conn, :show, user))
+        |> redirect(to: user_path(conn, :show, user))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
 
+  # def clear_user_session(conn) do
+  #   conn
+  #   |> put_session(:user_id, nil)
+  # end
+
   def delete(conn, %{"id" => id}) do
     with %User{} = user <- Users.get_user(id),
          {:ok, user} <- Users.delete_user(user) do
       conn
+      #  |> clear_user_session()
+      #  |> redirect(to: "/login")
       |> put_flash(:info, "#{user.name} deleted successfully.")
-      |> redirect(to: JiraWeb.Router.Helpers.user_path(conn, :index))
+      |> redirect(to: user_path(conn, :index))
     else
       nil ->
         conn
         |> put_flash(:error, "User not found.")
-        |> redirect(to: JiraWeb.Router.Helpers.user_path(conn, :index))
+        |> redirect(to: user_path(conn, :index))
     end
   end
 end

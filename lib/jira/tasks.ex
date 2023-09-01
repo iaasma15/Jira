@@ -5,22 +5,25 @@ defmodule Jira.Tasks do
   import Ecto.Changeset
   ## CRUDL
 
-  def list_tasks(params \\ %{}) do
+  def project_tasks(project_id, search_term) do
     query =
-      if params["search"] do
-        term = "%#{params["search"]}"
+      if String.length("#{search_term}") > 0 do
+        term = "%#{search_term}%"
 
         from t in Task,
+          where: t.project_id == ^project_id,
           where: ilike(t.name, ^term)
       else
-        from t in Task, order_by: [asc: t.id]
+        from t in Task,
+          where: t.project_id == ^project_id,
+          order_by: [asc: t.id]
       end
 
     Repo.all(query)
   end
 
-  def change_task(%Task{} = task) do
-    Task.changeset(task, %{})
+  def new_task_changeset() do
+    change(%Task{}, %{})
   end
 
   def get_project(id) do

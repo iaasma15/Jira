@@ -5,20 +5,6 @@ defmodule Jira.Projects do
   import Ecto.Changeset
   ## CRUDL
 
-  def list_projects(params \\ %{}) do
-    query =
-      if params["search"] do
-        term = "%#{params["search"]}"
-
-        from p in Project,
-          where: ilike(p.name, ^term)
-      else
-        from p in Project, order_by: [asc: p.id]
-      end
-
-    Repo.all(query)
-  end
-
   def user_projects(user_id, search_term) do
     query =
       if String.length("#{search_term}") > 0 do

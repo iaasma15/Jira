@@ -16,18 +16,25 @@ defmodule JiraWeb.AuthController do
         conn
         |> put_session(:current_user, user)
         |> put_flash(:info, "#{user.name} login successfully.")
-        |> redirect(to: "/projects")
+        |> redirect(to: project_path(conn, :index))
 
       {:error, :name_and_password_does_not_match} ->
         conn
         |> put_flash(:error, ":name_and_password_does_not_match")
-        |> redirect(to: "/login")
+        |> redirect(to: auth_path(conn, :form))
 
       {:error, :user_not_found} ->
         conn
         |> put_flash(:error, ":user_not_found")
-        |> redirect(to: "/login")
+        |> redirect(to: auth_path(conn, :form))
     end
+  end
+
+  def logout(conn, _params) do
+    conn
+    |> put_session(:current_user, nil)
+    |> put_flash(:info, "User logged out successfully.")
+    |> redirect(to: "/login")
   end
 end
 
