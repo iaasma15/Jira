@@ -89,12 +89,13 @@ defmodule Jira.UsersTest do
     end
 
     test "error case, incorrect password" do
-      assert {:error, :name_and_password_does_not_match} =
-               Users.login(%{"login" => "asma", "password" => "1234"})
+      assert {:error, changeset} = Users.login(%{"login" => "asma", "password" => "1234"})
+      assert errors_on(changeset) == %{password: ["doesn't match"]}
     end
 
     test "error case, user not found" do
-      assert {:error, :user_not_found} = Users.login(%{"login" => "anton", "password" => "1234"})
+      assert {:error, changeset} = Users.login(%{"login" => "anton", "password" => "1234"})
+      assert errors_on(changeset) == %{login: ["no such user"]}
     end
   end
 end

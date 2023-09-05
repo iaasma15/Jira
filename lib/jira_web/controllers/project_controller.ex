@@ -5,7 +5,7 @@ defmodule JiraWeb.ProjectController do
   alias Jira.Project
 
   def index(conn, params) do
-    current_user = get_session(conn, :current_user)
+    current_user = conn.assigns[:current_user]
     projects = Projects.user_projects(current_user.id, params["search"])
     render(conn, "index.html", projects: projects)
   end

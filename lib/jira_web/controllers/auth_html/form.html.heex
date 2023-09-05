@@ -1,7 +1,5 @@
 <h1 class="text-3xl font-raleway text-black-400">Login</h1>
 
-<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
-
 <%= form_for @changeset, "/login", [class: "bg-white"] , fn f -> %>
   <label class="block text-gray-700 text-sm font-bold mb-2">Login:</label> <%= text_input(
     f,

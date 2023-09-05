@@ -34,11 +34,13 @@ defmodule Jira.Users do
         if password_match?(user, attrs["password"]) do
           {:ok, user}
         else
-          {:error, :name_and_password_does_not_match}
+          changeset = add_error(new_user_changeset(), :password, "doesn't match")
+          {:error, changeset}
         end
 
       nil ->
-        {:error, :user_not_found}
+        changeset = add_error(new_user_changeset(), :login, "no such user")
+        {:error, changeset}
     end
   end
 

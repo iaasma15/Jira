@@ -18,15 +18,10 @@ defmodule JiraWeb.AuthController do
         |> put_flash(:info, "#{user.name} login successfully.")
         |> redirect(to: project_path(conn, :index))
 
-      {:error, :name_and_password_does_not_match} ->
+      {:error, changeset} ->
         conn
-        |> put_flash(:error, ":name_and_password_does_not_match")
-        |> redirect(to: auth_path(conn, :form))
-
-      {:error, :user_not_found} ->
-        conn
-        |> put_flash(:error, ":user_not_found")
-        |> redirect(to: auth_path(conn, :form))
+        |> put_flash(:error, "Login and Password does not match")
+        |> render("form.html", changeset: changeset)
     end
   end
 

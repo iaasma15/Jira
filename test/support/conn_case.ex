@@ -33,6 +33,7 @@ defmodule JiraWeb.ConnCase do
 
   setup tags do
     Jira.DataCase.setup_sandbox(tags)
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    conn = Plug.Test.init_test_session(Phoenix.ConnTest.build_conn(), %{})
+    {:ok, conn: conn}
   end
 end
