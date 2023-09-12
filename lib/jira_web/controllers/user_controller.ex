@@ -20,16 +20,6 @@ defmodule JiraWeb.UserController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  # def create(conn, %{"user" => user_params}) do
-  #   changeset = User.registration_changeset(%User{}, user_params)
-  #   case Repo.insert(changeset) do
-  #     {:ok, user} ->
-  #       conn
-  #       |> put_flash(:info, "#{user.name} created successfully.")
-  #       |> redirect(to: JiraWeb.Router.Helpers.user_path(conn, :show, user))
-  #   end
-  # end
-
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
       {:ok, user} ->

@@ -11,9 +11,23 @@ defmodule JiraWeb.Router do
     plug :set_current_user
   end
 
+  pipeline :auth do
+    plug :check_current_user
+  end
+
   def set_current_user(conn, params) do
     current_user = get_session(conn, :current_user)
     assign(conn, :current_user, current_user)
+  end
+
+  def check_current_user(conn, _opts) do
+    if conn.assigns[:current_user] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "Please login")
+      |> redirect(to: "/login")
+    end
   end
 
   pipeline :api do
@@ -23,20 +37,20 @@ defmodule JiraWeb.Router do
   scope "/", JiraWeb do
     pipe_through :browser
 
+    get "/", PageController, :home
     get "/register", RegistrationController, :form
     post "/register", RegistrationController, :register
     get "/login", AuthController, :form
     post "/login", AuthController, :login
     delete "/logout", AuthController, :logout
 
-    get "/", PageController, :home
-    resources "/users", UserController
+    pipe_through :auth
 
-    resources "/projects", ProjectController do
+    resources "/projects", ProjectController, except: [:show] do
       resources "/tasks", TaskController
     end
 
-    get "/task_description/:id", TaskController, :show
+    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.

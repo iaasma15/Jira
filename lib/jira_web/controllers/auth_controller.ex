@@ -5,7 +5,7 @@ defmodule JiraWeb.AuthController do
 
   def form(conn, params) do
     changeset = Users.new_user_changeset()
-    render(conn, "form.html", changeset: changeset)
+    render(conn, "form.html", changeset: changeset, login: "")
   end
 
   def login(conn, %{"user" => user_params}) do
@@ -19,9 +19,11 @@ defmodule JiraWeb.AuthController do
         |> redirect(to: project_path(conn, :index))
 
       {:error, changeset} ->
+        login = Map.get(user_params, "login", "")
+
         conn
         |> put_flash(:error, "Login and Password does not match")
-        |> render("form.html", changeset: changeset)
+        |> render("form.html", changeset: changeset, login: login)
     end
   end
 

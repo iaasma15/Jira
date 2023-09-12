@@ -1,6 +1,8 @@
 <h1 class="text-3xl font-raleway text-black-400">Task List</h1>
 
-<form action="/tasks/" method="get">
+<% attrs = %{action: "/projects/#{@project_id}/tasks/", method: "get"} %>
+
+<form {attrs}>
   <label for="search">Search:</label> <br />
   <input type="text" id="search" name="search" value="" /><br />
 </form>
@@ -17,6 +19,8 @@
 
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Link</th>
 
+    <th class="border border-gray-400 px-4 py-2 text-gray-800">Edit/Update</th>
+
     <th class="border border-gray-400 px-4 py-2 text-gray-800">Delete</th>
   </tr>
 
@@ -31,6 +35,10 @@
       <td class="border border-gray-400 px-4 py-2"><%= task.status %></td>
 
       <td class="border border-gray-400 px-4 py-2"><b><%= link_to_task(@conn, task.id) %></b></td>
+
+      <td class="border border-gray-400 px-4 py-2">
+        <b><%= update_task_link(@conn, task.id) %></b>
+      </td>
 
       <td class="border border-gray-400 px-4 py-2">
         <b><%= delete_task_link(@conn, task.id) %></b>

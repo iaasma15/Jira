@@ -4,9 +4,10 @@
   <label class="block text-gray-700 text-sm font-bold mb-2">Login:</label> <%= text_input(
     f,
     :login,
+    value: @login,
     class: "text-input"
   ) %>
-  <label class="block text-gray-700 text-sm font-bold mb-2">Password:</label> <%= text_input(
+  <label class="block text-gray-700 text-sm font-bold mb-2">Password:</label> <%= password_input(
     f,
     :password,
     class: "text-input"

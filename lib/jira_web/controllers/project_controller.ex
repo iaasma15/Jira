@@ -10,9 +10,37 @@ defmodule JiraWeb.ProjectController do
     render(conn, "index.html", projects: projects)
   end
 
-  def show(conn, %{"id" => id}) do
-    project = Projects.get_project(id)
-    render(conn, "show.html", project: project)
+  def edit(conn, %{"id" => id}) do
+    case Projects.get_project(id) do
+      %Project{} = project ->
+        changeset = Project.changeset(project, %{})
+        render(conn, "edit.html", project: project, changeset: changeset)
+
+      nil ->
+        conn
+        |> put_flash(:error, "Project not found.")
+        |> redirect(to: project_path(conn, :index))
+    end
+  end
+
+  def update(conn, %{"project" => project_params, "id" => id}) do
+    case Projects.get_project(id) do
+      %Project{} = project ->
+        case Projects.update_project(project, project_params) do
+          {:ok, project} ->
+            conn
+            |> put_flash(:info, "#{project.name} updated successfully.")
+            |> redirect(to: project_path(conn, :index))
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            render(conn, "edit.html", project: project, changeset: changeset)
+        end
+
+      nil ->
+        conn
+        |> put_flash(:error, "Project not found.")
+        |> redirect(to: project_path(conn, :index))
+    end
   end
 
   def new(conn, _params) do

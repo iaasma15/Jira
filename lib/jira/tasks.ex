@@ -34,6 +34,15 @@ defmodule Jira.Tasks do
     Repo.get(Task, id)
   end
 
+  def task_for_project(project_id, task_id) do
+    query =
+      from t in Task,
+        where: t.id == ^task_id,
+        where: t.project_id == ^project_id
+
+    Repo.one(query)
+  end
+
   def get_task_by(params) do
     Repo.get_by(Task, params)
   end
@@ -44,11 +53,11 @@ defmodule Jira.Tasks do
     |> Repo.insert()
   end
 
-  # def update_project(project, attrs) do
-  #     %User{}
-  #     |> Project.changeset(attrs)
-  #     |> Repo.update()
-  # end
+  def update_task(task, attrs) do
+    task
+    |> Task.changeset(attrs)
+    |> Repo.update()
+  end
 
   def delete_task(task) do
     Repo.delete(task)

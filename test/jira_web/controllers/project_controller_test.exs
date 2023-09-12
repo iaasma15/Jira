@@ -72,9 +72,31 @@ defmodule JiraWeb.ProjectControllerTest do
       assert resp.status == 302
       assert Enum.member?(resp.resp_headers, {"location", "/projects"})
       assert resp.assigns[:flash] == %{"info" => "Asma project created successfully."}
-
       resp = get(conn, ~p"/projects")
       assert html_response(resp, 200) =~ "Asma project"
+    end
+  end
+
+  describe "PUT /projects/:id" do
+    setup %{user: user} do
+      {:ok, project} =
+        Projects.create_project(%{
+          "name" => "asma",
+          "description" => "fghjkvb",
+          "user_id" => user.id
+        })
+
+      %{project: project}
+    end
+
+    test "success case", %{conn: conn, project: project} do
+      attr = %{"name" => "Anton Project", "description" => "qwert"}
+
+      resp = put(conn, ~p"/projects/#{project.id}", %{"project" => attr})
+      assert resp.status == 302
+
+      resp = get(conn, ~p"/projects")
+      assert html_response(resp, 200) =~ "Anton Project"
     end
   end
 end

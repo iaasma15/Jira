@@ -1,0 +1,9 @@
+<h1 class="text-3xl font-raleway text-black-400">Edit Project</h1>
+
+<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
+
+<%= Phoenix.Template.render(JiraWeb.ProjectHTML, "form", "html",
+  changeset: @changeset,
+  action: "/projects/#{@project.id}",
+  submit: "Update"
+) %>

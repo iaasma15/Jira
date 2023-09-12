@@ -22,6 +22,15 @@ defmodule Jira.Projects do
     Repo.all(query)
   end
 
+  def user_project(user_id, id) do
+    query =
+      from p in Project,
+        where: p.user_id == ^user_id,
+        where: p.id == ^id
+
+    Repo.one(query)
+  end
+
   def new_project_changeset() do
     change(%Project{}, %{})
   end
@@ -44,11 +53,11 @@ defmodule Jira.Projects do
     |> Repo.insert()
   end
 
-  # def update_project(project, attrs) do
-  #     %User{}
-  #     |> Project.changeset(attrs)
-  #     |> Repo.update()
-  # end
+  def update_project(project, attrs) do
+    project
+    |> Project.changeset(attrs)
+    |> Repo.update()
+  end
 
   def delete_project(project) do
     Repo.delete(project)

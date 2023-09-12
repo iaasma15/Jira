@@ -17,10 +17,10 @@ defmodule JiraWeb.ProjectHTML do
     Link.link("Show", to: "/projects/#{id}/tasks")
   end
 
-  # def edit_project_link(%Project{id: id}) do
-  #   # path = RumblWeb.Router.Helpers.user_path(conn, :create)
-  #   Link.link("Edit", to: "/projects/#{id}/edit")
-  # end
+  def update_project_link(%Project{id: id}) do
+    # path = RumblWeb.Router.Helpers.user_path(conn, :create)
+    Link.link("Edit", to: "/projects/#{id}/edit")
+  end
 
   def delete_project_link(project) do
     Link.link("Delete", to: "/projects/#{project.id}", method: :delete)

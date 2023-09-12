@@ -1,0 +1,9 @@
+<h1 class="text-3xl font-raleway text-black-400">Edit Task</h1>
+
+<p class="text-sm text-red-900"><%= error_message(@changeset) %></p>
+
+<%= Phoenix.Template.render(JiraWeb.TaskHTML, "form", "html",
+  changeset: @changeset,
+  action: "/projects/#{@task.project_id}/tasks/#{@task.id}",
+  submit: "Update"
+) %>

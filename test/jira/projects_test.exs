@@ -80,5 +80,35 @@ defmodule Jira.ProjectsTest do
       projects = Projects.user_projects(user.id, "diamond1")
       assert length(projects) == 2
     end
+
+    test "update_project", %{user: user} do
+      {:ok, project} =
+        Projects.create_project(%{
+          "name" => "diamond11",
+          "description" => "dhjk",
+          "user_id" => user.id
+        })
+
+      {:ok, project} =
+        Projects.update_project(project, %{
+          "name" => "diamond",
+          "description" => "star",
+          "user_id" => user.id
+        })
+
+      assert project.name == "diamond"
+      assert project.description == "star"
+    end
+
+    test "error case, update when name is nil", %{user: user} do
+      {:ok, project} =
+        Projects.create_project(%{
+          "name" => "diamond11",
+          "description" => "dhjk",
+          "user_id" => user.id
+        })
+
+      assert {:error, _error} = Projects.update_project(project, %{name: nil, description: "te"})
+    end
   end
 end
