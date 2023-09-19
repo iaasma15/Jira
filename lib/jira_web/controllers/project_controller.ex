@@ -4,42 +4,31 @@ defmodule JiraWeb.ProjectController do
   alias Jira.Projects
   alias Jira.Project
 
+  plug :find_project when action in [:edit, :update, :delete]
+
   def index(conn, params) do
     current_user = conn.assigns[:current_user]
     projects = Projects.user_projects(current_user.id, params["search"])
     render(conn, "index.html", projects: projects)
   end
 
-  def edit(conn, %{"id" => id}) do
-    case Projects.get_project(id) do
-      %Project{} = project ->
-        changeset = Project.changeset(project, %{})
-        render(conn, "edit.html", project: project, changeset: changeset)
-
-      nil ->
-        conn
-        |> put_flash(:error, "Project not found.")
-        |> redirect(to: project_path(conn, :index))
-    end
+  def edit(conn, _params) do
+    project = conn.assigns[:project]
+    changeset = Project.changeset(project, %{})
+    render(conn, "edit.html", project: project, changeset: changeset)
   end
 
-  def update(conn, %{"project" => project_params, "id" => id}) do
-    case Projects.get_project(id) do
-      %Project{} = project ->
-        case Projects.update_project(project, project_params) do
-          {:ok, project} ->
-            conn
-            |> put_flash(:info, "#{project.name} updated successfully.")
-            |> redirect(to: project_path(conn, :index))
+  def update(conn, %{"project" => project_params}) do
+    project = conn.assigns[:project]
 
-          {:error, %Ecto.Changeset{} = changeset} ->
-            render(conn, "edit.html", project: project, changeset: changeset)
-        end
-
-      nil ->
+    case Projects.update_project(project, project_params) do
+      {:ok, project} ->
         conn
-        |> put_flash(:error, "Project not found.")
+        |> put_flash(:info, "#{project.name} updated successfully.")
         |> redirect(to: project_path(conn, :index))
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "edit.html", project: project, changeset: changeset)
     end
   end
 
@@ -63,17 +52,28 @@ defmodule JiraWeb.ProjectController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    with %Project{} = project <- Projects.get_project(id),
-         {:ok, project} <- Projects.delete_project(project) do
-      conn
-      |> put_flash(:info, "#{project.name} deleted successfully.")
-      |> redirect(to: project_path(conn, :index))
-    else
+  def delete(conn, _params) do
+    project = conn.assigns[:project]
+    {:ok, project} = Projects.delete_project(project)
+
+    conn
+    |> put_flash(:info, "#{project.name} deleted successfully.")
+    |> redirect(to: project_path(conn, :index))
+  end
+
+  def find_project(conn, _opts) do
+    current_user = conn.assigns[:current_user]
+    id = conn.params["id"]
+
+    case Projects.user_project(current_user.id, id) do
+      %Project{} = project ->
+        assign(conn, :project, project)
+
       nil ->
         conn
-        |> put_flash(:error, "Project not found.")
+        |> put_flash(:error, "There are no such project")
         |> redirect(to: project_path(conn, :index))
+        |> halt()
     end
   end
 end

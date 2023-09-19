@@ -112,35 +112,42 @@ defmodule Jira.TasksTest do
       projects = Tasks.project_tasks(project.id, "reaCT1")
       assert length(projects) == 1
     end
+  end
 
-    # test "update_task", %{project: project} do
-    #   {:ok, task} = 
-    #   Tasks.create_task(%{
-    #   "name" => "diamond11",
-    #   "description" => "moon",
-    #   "project_id" => project.id
-    #   })
+  describe "update_task/2" do
+    setup %{project: project} do
+      {:ok, task} =
+        Tasks.create_task(%{
+          "name" => "react",
+          "description" => "fghjkvb",
+          "project_id" => project.id
+        })
 
-    #   {:ok, task} = 
-    #   Tasks.update_task(%{
-    #   "name" => "diamond",
-    #   "description" => "star",
-    #   "project_id" => project.id
-    #   })
+      %{task: task}
+    end
 
-    #   assert task.name == "diamond"
-    #   assert task.description == "star"
-    # end
+    test "success case", %{project: project, task: task} do
+      {:ok, task} =
+        Tasks.update_task(task, %{
+          "name" => "diamond",
+          "description" => "star",
+          "project_id" => project.id,
+          "status" => "not active"
+        })
 
-    # test "error case, update when name is nil", %{project: project} do
-    #   {:ok, task} = 
-    #   Tasks.create_task(%{
-    #   "name" => "diamond",
-    #   "description" => "star",
-    #   "project_id" => project.id
-    #   })
+      assert task.name == "diamond"
+      assert task.description == "star"
+    end
 
-    #   assert {:error, _error} = Tasks.update_task(project, %{name: nil, description: "te"})
-    # end
+    test "error case, update when name is nil", %{project: project} do
+      {:ok, task} =
+        Tasks.create_task(%{
+          "name" => "diamond",
+          "description" => "star",
+          "project_id" => project.id
+        })
+
+      assert {:error, _error} = Tasks.update_task(task, %{name: nil, description: "te"})
+    end
   end
 end

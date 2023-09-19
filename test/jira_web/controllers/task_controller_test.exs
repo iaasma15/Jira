@@ -86,9 +86,31 @@ defmodule JiraWeb.TaskControllerTest do
 
       tasks_url = Routes.project_task_path(conn, :create, project)
       conn = post(conn, tasks_url, %{"task" => attr})
-      IO.inspect(conn)
       assert conn.status == 200
-      # assert conn.assigns[:errors] == %{"name" => "should be at least %{count} character(s)"}
+      assert length(conn.assigns[:changeset].errors) > 0
+    end
+  end
+
+  describe "PUT /tasks/:id" do
+    setup %{project: project} do
+      {:ok, task} =
+        Tasks.create_task(%{
+          "name" => "metal",
+          "description" => "hello",
+          "project_id" => project.id
+        })
+
+      %{task: task}
+    end
+
+    test "success case", %{conn: conn, project: project, task: task} do
+      attr = %{"name" => "Anton Project", "description" => "qwert"}
+
+      resp = put(conn, ~p"/projects/#{project.id}/tasks/#{task.id}", %{"task" => attr})
+      assert resp.status == 302
+
+      resp = get(conn, ~p"/projects/#{project.id}/tasks")
+      assert html_response(resp, 200) =~ "Anton Project"
     end
   end
 end

@@ -1,6 +1,6 @@
 defmodule Jira.Tasks do
   alias Jira.Repo
-  alias Jira.Task
+  alias Jira.{Task, Project}
   import Ecto.Query
   import Ecto.Changeset
   ## CRUDL
@@ -34,11 +34,8 @@ defmodule Jira.Tasks do
     Repo.get(Task, id)
   end
 
-  def task_for_project(project_id, task_id) do
-    query =
-      from t in Task,
-        where: t.id == ^task_id,
-        where: t.project_id == ^project_id
+  def task_for_project(project_id, id) do
+    query = from t in Task, where: t.id == ^id and t.project_id == ^project_id
 
     Repo.one(query)
   end

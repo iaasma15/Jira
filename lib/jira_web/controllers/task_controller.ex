@@ -9,26 +9,25 @@ defmodule JiraWeb.TaskController do
 
   plug :authorize_project
 
-  def index(conn, params) do
-    ## getting from params
-    project_id = params["project_id"]
+  def index(conn, %{"project_id" => project_id} = params) do
     tasks = Tasks.project_tasks(project_id, params["search"])
-
-    # tasks = Tasks.user_project_tasks(conn.assigns[:current_user].id, project_id, params["search"])
     render(conn, "index.html", tasks: tasks, project_id: project_id)
   end
 
-  def show(conn, %{"id" => id}) do
-    task = Repo.get!(Task, id)
-    # |> Repo.preload(:project)
-    render(conn, "task_description.html", task: task)
+  def show(conn, %{"id" => id, "project_id" => project_id}) do
+    case Tasks.task_for_project(project_id, id) do
+      %Task{} = task ->
+        render(conn, "show.html", task: task)
+
+      nil ->
+        conn
+        |> put_flash(:error, "Task not found.")
+        |> redirect(to: project_task_path(conn, :index, project_id))
+    end
   end
 
   def edit(conn, %{"id" => id, "project_id" => project_id}) do
-    IO.inspect(conn)
-
-    case Tasks.task_for_project(conn.assigns[:project].id, id) do
-      # case Tasks.get_task(id) do
+    case Tasks.task_for_project(project_id, id) do
       %Task{} = task ->
         changeset = Task.changeset(task, %{})
         render(conn, "edit.html", task: task, changeset: changeset)
@@ -41,7 +40,7 @@ defmodule JiraWeb.TaskController do
   end
 
   def update(conn, %{"task" => task_params, "id" => id, "project_id" => project_id}) do
-    case Tasks.get_task(id) do
+    case Tasks.task_for_project(project_id, id) do
       %Task{} = task ->
         case Tasks.update_task(task, task_params) do
           {:ok, task} ->
@@ -60,26 +59,10 @@ defmodule JiraWeb.TaskController do
     end
   end
 
-  def new(conn, params) do
-    project_id = params["project_id"]
+  def new(conn, %{"project_id" => project_id}) do
     changeset = Tasks.new_task_changeset()
     render(conn, "new.html", changeset: changeset, project_id: project_id)
   end
-
-  # def create(conn, %{"task" => task_params}) do
-  #   current_project = get_session(conn, :current_project)
-  #   task_params = Map.put(task_params, "project_id", current_project.id)
-
-  #   case Tasks.create_task(task_params) do
-  #     {:ok, task} ->
-  #       conn
-  #       |> put_flash(:info, "#{task.name} created successfully.")
-  #       |> redirect(to: JiraWeb.Router.Helpers.project_task_path(conn, :index))
-
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       render(conn, "new.html", changeset: changeset)
-  #   end
-  # end
 
   def create(conn, %{"task" => task_params, "project_id" => project_id}) do
     task_params = Map.put(task_params, "project_id", project_id)
@@ -121,6 +104,7 @@ defmodule JiraWeb.TaskController do
         conn
         |> put_flash(:error, "You are not authorized to see the page!")
         |> redirect(to: project_path(conn, :index))
+        |> halt()
     end
   end
 end
