@@ -1,9 +1,11 @@
 ## TODO
 
-- improve task status
-
 - fix annoying warning (later)
 
-- Show the number of tasks in the projects on index page
+UserController can be used
 
-- Render proper 404 error when user tries to reach to unexcisting route
+- editing user info via user himself, or deleting account
+
+AdminController or AdminUserController can be used
+
+- Admin area to manage users

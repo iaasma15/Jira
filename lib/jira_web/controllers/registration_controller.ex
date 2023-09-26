@@ -1,9 +1,8 @@
 defmodule JiraWeb.RegistrationController do
   use JiraWeb, :controller
   alias Jira.Users
-  alias Jira.User
 
-  def form(conn, params) do
+  def form(conn, _params) do
     changeset = Users.new_user_changeset()
     render(conn, "form.html", changeset: changeset)
   end

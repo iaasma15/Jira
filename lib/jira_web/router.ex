@@ -15,7 +15,7 @@ defmodule JiraWeb.Router do
     plug :check_current_user
   end
 
-  def set_current_user(conn, params) do
+  def set_current_user(conn, _params) do
     current_user = get_session(conn, :current_user)
     assign(conn, :current_user, current_user)
   end
@@ -49,8 +49,6 @@ defmodule JiraWeb.Router do
     resources "/projects", ProjectController, except: [:show] do
       resources "/tasks", TaskController
     end
-
-    resources "/users", UserController
   end
 
   # Other scopes may use custom stacks.

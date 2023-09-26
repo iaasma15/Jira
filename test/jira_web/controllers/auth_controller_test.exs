@@ -1,4 +1,4 @@
-defmodule JiraWeb.RegistrationControllerTest do
+defmodule JiraWeb.AuthControllerTest do
   use JiraWeb.ConnCase
   alias Jira.Users
 

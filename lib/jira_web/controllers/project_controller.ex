@@ -1,6 +1,5 @@
 defmodule JiraWeb.ProjectController do
   use JiraWeb, :controller
-  import Ecto.Query
   alias Jira.Projects
   alias Jira.Project
 

@@ -63,7 +63,7 @@ defmodule Jira.Users do
   end
 
   def update_user(user, attrs) do
-    %User{}
+    user
     |> User.changeset(attrs)
     |> Repo.update()
   end

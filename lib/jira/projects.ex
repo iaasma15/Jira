@@ -1,6 +1,7 @@
 defmodule Jira.Projects do
   alias Jira.Repo
   alias Jira.Project
+  alias Jira.Task
   import Ecto.Query
   import Ecto.Changeset
   ## CRUDL
@@ -19,7 +20,10 @@ defmodule Jira.Projects do
           order_by: [asc: p.id]
       end
 
-    Repo.all(query)
+    query
+    |> Repo.all()
+    |> Repo.preload(:tasks)
+    |> Enum.map(&%{&1 | tasks_count: length(&1.tasks)})
   end
 
   def user_project(user_id, id) do
@@ -28,6 +32,11 @@ defmodule Jira.Projects do
         where: p.user_id == ^user_id,
         where: p.id == ^id
 
+    Repo.one(query)
+  end
+
+  def count_tasks(project_id) do
+    query = from t in Task, select: count(t.id, :distinct), where: t.project_id == ^project_id
     Repo.one(query)
   end
 
