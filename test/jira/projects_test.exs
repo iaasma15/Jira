@@ -1,7 +1,6 @@
 defmodule Jira.ProjectsTest do
   use Jira.DataCase
-  alias Jira.Projects
-  alias Jira.Users
+  alias Jira.{Projects, Tasks, Users}
 
   setup do
     attrs = %{
@@ -41,11 +40,19 @@ defmodule Jira.ProjectsTest do
   describe "user_projects/2" do
     setup %{user: user} do
       # create a couple of projects
-      {:ok, _project} =
+      {:ok, project} =
         Projects.create_project(%{
           "name" => "diamond",
           "description" => "fghjkvb",
           "user_id" => user.id
+        })
+
+      {:ok, _task} =
+        Tasks.create_task(%{
+          "name" => "react",
+          "description" => "fghjkvb",
+          "status" => "todo",
+          "project_id" => project.id
         })
 
       {:ok, _project} =
@@ -62,7 +69,7 @@ defmodule Jira.ProjectsTest do
           "user_id" => user.id
         })
 
-      :ok
+      %{project: project}
     end
 
     test "show all for user", %{user: user} do
@@ -79,6 +86,12 @@ defmodule Jira.ProjectsTest do
 
       projects = Projects.user_projects(user.id, "diamond1")
       assert length(projects) == 2
+    end
+
+    test "project has tasks_count", %{user: user, project: project} do
+      projects = Projects.user_projects(user.id, nil)
+      project = Enum.find(projects, &(&1.id == project.id))
+      assert project.tasks_count == 1
     end
 
     test "update_project", %{user: user} do

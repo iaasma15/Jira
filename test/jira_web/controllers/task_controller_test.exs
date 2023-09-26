@@ -19,6 +19,7 @@ defmodule JiraWeb.TaskControllerTest do
       Projects.create_project(%{
         "name" => "asma",
         "description" => "fghjkvb",
+        "status" => "todo",
         "user_id" => user.id
       })
 
@@ -36,6 +37,7 @@ defmodule JiraWeb.TaskControllerTest do
         Tasks.create_task(%{
           "name" => "metal",
           "description" => "hello",
+          "status" => "todo",
           "project_id" => project.id
         })
 
@@ -55,7 +57,8 @@ defmodule JiraWeb.TaskControllerTest do
       project: project,
       task: task
     } do
-      {:ok, another_task} = Tasks.create_task(%{"name" => "steel", "project_id" => project.id})
+      {:ok, another_task} =
+        Tasks.create_task(%{"name" => "steel", "status" => "todo", "project_id" => project.id})
 
       tasks_url = Routes.project_task_path(conn, :index, project)
       conn = get(conn, tasks_url, %{"search" => "steel"})
@@ -69,6 +72,7 @@ defmodule JiraWeb.TaskControllerTest do
     test "success case", %{conn: conn, project: project} do
       attr = %{
         "name" => "Asma task",
+        "status" => "todo",
         "description" => "vbn"
       }
 
@@ -81,6 +85,7 @@ defmodule JiraWeb.TaskControllerTest do
     test "error case, when name is empty", %{conn: conn, project: project} do
       attr = %{
         "name" => "As",
+        "status" => "todo",
         "description" => "vbn"
       }
 
@@ -97,6 +102,7 @@ defmodule JiraWeb.TaskControllerTest do
         Tasks.create_task(%{
           "name" => "metal",
           "description" => "hello",
+          "status" => "todo",
           "project_id" => project.id
         })
 
@@ -104,7 +110,7 @@ defmodule JiraWeb.TaskControllerTest do
     end
 
     test "success case", %{conn: conn, project: project, task: task} do
-      attr = %{"name" => "Anton Project", "description" => "qwert"}
+      attr = %{"name" => "Anton Project", "status" => "todo", "description" => "qwert"}
 
       resp = put(conn, ~p"/projects/#{project.id}/tasks/#{task.id}", %{"task" => attr})
       assert resp.status == 302

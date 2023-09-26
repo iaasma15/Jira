@@ -1,7 +1,6 @@
 defmodule JiraWeb.TaskHTML do
   use JiraWeb, :html
-  alias Jira.Task
-  alias Jira.Project
+  alias Jira.{Task, Tasks}
   alias Phoenix.HTML.Link
   import Phoenix.HTML.Form
 
@@ -32,5 +31,9 @@ defmodule JiraWeb.TaskHTML do
   def delete_task_link(conn, id) do
     project_id = conn.assigns[:project_id]
     Link.link("Delete", to: project_task_path(conn, :delete, project_id, id), method: :delete)
+  end
+
+  def statuses do
+    Tasks.task_statuses()
   end
 end

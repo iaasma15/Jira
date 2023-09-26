@@ -2,10 +2,11 @@
   <label class="block text-gray-700 text-sm font-bold mb-2">Name:</label> <%= text_input(f, :name,
     class: "text-input"
   ) %>
-
-  <label class="block text-gray-700 text-sm font-bold mb-2">Status:</label> <%= text_input(
+  <label class="block text-gray-700 text-sm font-bold mb-2">Status:</label> <%= select(
     f,
     :status,
+    statuses(),
+    selected: f.data.status || :todo,
     class: "text-input"
   ) %>
 

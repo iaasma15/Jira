@@ -35,6 +35,8 @@
       <td class="border border-gray-400 px-4 py-2"><b><%= project.user_id %></b></td>
 
       <td class="border border-gray-400 px-4 py-2"><b><%= delete_project_link(project) %></b></td>
+
+      <td class="border border-gray-400 px-4 py-2"><b><%= project.tasks_count %></b></td>
     </tr>
   <% end %>
 </table>

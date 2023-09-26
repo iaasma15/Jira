@@ -1,9 +1,7 @@
 defmodule JiraWeb.TaskController do
   use JiraWeb, :controller
-  import Ecto.Repo
   alias Jira.Tasks
   alias Jira.Task
-  alias Jira.Repo
   alias Jira.Projects
   alias Jira.Project
 

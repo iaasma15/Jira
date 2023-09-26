@@ -36,20 +36,33 @@ defmodule Jira.TasksTest do
     end
 
     test "error case, no project_id" do
-      assert {:error, changeset} = Tasks.create_task(%{"name" => "metal"})
+      assert {:error, changeset} = Tasks.create_task(%{"name" => "metal", "status" => "todo"})
       assert errors_on(changeset) == %{project_id: ["can't be blank"]}
     end
 
     test "error case, no task_name", %{project: project} do
-      assert {:error, changeset} = Tasks.create_task(%{"project_id" => project.id})
+      assert {:error, changeset} =
+               Tasks.create_task(%{"project_id" => project.id, "status" => "todo"})
+
       assert errors_on(changeset) == %{name: ["can't be blank"]}
     end
 
     test "error case, name length validation", %{project: project} do
       assert {:error, changeset} =
-               Tasks.create_task(%{"name" => "aa", "project_id" => project.id})
+               Tasks.create_task(%{"name" => "aa", "project_id" => project.id, "status" => "todo"})
 
       assert errors_on(changeset) == %{name: ["should be at least 3 character(s)"]}
+    end
+
+    test "error case, status is invalid", %{project: project} do
+      assert {:error, changeset} =
+               Tasks.create_task(%{
+                 "name" => "metal",
+                 "status" => "wrong",
+                 "project_id" => project.id
+               })
+
+      assert errors_on(changeset) == %{status: ["is invalid"]}
     end
   end
 
@@ -78,6 +91,7 @@ defmodule Jira.TasksTest do
         Tasks.create_task(%{
           "name" => "react",
           "description" => "fghjkvb",
+          "status" => "todo",
           "project_id" => project.id
         })
 
@@ -85,6 +99,7 @@ defmodule Jira.TasksTest do
         Tasks.create_task(%{
           "name" => "react1",
           "description" => "fghjkvb",
+          "status" => "todo",
           "project_id" => project.id
         })
 
@@ -92,6 +107,7 @@ defmodule Jira.TasksTest do
         Tasks.create_task(%{
           "name" => "react",
           "description" => "fghjkvb",
+          "status" => "todo",
           "project_id" => project.id
         })
 
@@ -120,34 +136,33 @@ defmodule Jira.TasksTest do
         Tasks.create_task(%{
           "name" => "react",
           "description" => "fghjkvb",
+          "status" => "todo",
           "project_id" => project.id
         })
 
       %{task: task}
     end
 
-    test "success case", %{project: project, task: task} do
+    test "success case", %{task: task} do
       {:ok, task} =
         Tasks.update_task(task, %{
           "name" => "diamond",
           "description" => "star",
-          "project_id" => project.id,
-          "status" => "not active"
+          "status" => "done"
         })
 
       assert task.name == "diamond"
       assert task.description == "star"
+      assert task.status == :done
     end
 
-    test "error case, update when name is nil", %{project: project} do
-      {:ok, task} =
-        Tasks.create_task(%{
-          "name" => "diamond",
-          "description" => "star",
-          "project_id" => project.id
-        })
-
+    test "error case, update when name is nil", %{task: task} do
       assert {:error, _error} = Tasks.update_task(task, %{name: nil, description: "te"})
+    end
+
+    test "error case, status is invalid", %{task: task} do
+      assert {:error, changeset} = Tasks.update_task(task, %{status: "wrong"})
+      assert errors_on(changeset) == %{status: ["is invalid"]}
     end
   end
 end

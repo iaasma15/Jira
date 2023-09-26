@@ -5,6 +5,10 @@ defmodule Jira.Tasks do
   import Ecto.Changeset
   ## CRUDL
 
+  def task_statuses do
+    %{"To do" => :todo, "In progress" => :in_progress, "Done" => :done}
+  end
+
   def project_tasks(project_id, search_term) do
     query =
       if String.length("#{search_term}") > 0 do

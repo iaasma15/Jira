@@ -8,6 +8,8 @@ defmodule Jira.Project do
     belongs_to :user, Jira.User
     has_many :tasks, Jira.Task
 
+    field :tasks_count, :integer, virtual: true
+
     timestamps()
   end
 
